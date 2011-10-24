@@ -65,7 +65,22 @@ class AspectRegistry {
 							//Add interception for each class->method pair
 							if (count($methods) > 0) {
 								foreach ($methods as $method) {
-									echo 'Adding interception for '.$class.'->'.$method->name.' [type:'.$joinpoint->getCallType().', call: '.$joinpoint->getCall().']'."\n";
+									//Add intercept to chain
+									InterceptionChain::getInstance()->addInterception($class.'->'.$method->name, $joinpoint);
+									if ($joinpoint->getCallType() == 'Before' || $joinpoint->getCallType() == 'Around') {
+										$func = InterceptionChain::getInstance()->getMethodInterceptorsCall('Before', $class.'->'.$method->name);
+										if (!InterceptionChain::getInstance()->IsRegistered($func)) {
+											intercept_add($class.'->'.$method->name, $func, PRE_INTERCEPT);
+											InterceptionChain::getInstance()->registerInterceptFunction($func);
+										}
+									}
+									if ($joinpoint->getCallType() == 'After' || $joinpoint->getCallType() == 'Around') {
+										$func = InterceptionChain::getInstance()->getMethodInterceptorsCall('After', $class.'->'.$method->name);
+										if (!InterceptionChain::getInstance()->IsRegistered($func)) {
+											intercept_add($class.'->'.$method->name, $func, POST_INTERCEPT);
+											InterceptionChain::getInstance()->registerInterceptFunction($func);
+										}
+									}
 								}
 							}
 						}

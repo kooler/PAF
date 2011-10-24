@@ -30,33 +30,58 @@ class Joinpoint {
 		$this->call = $call;
 	}
 	/**
-	 * Execute $call function
-	 * This method will be fired on the $callType event for $objectToIntercept
+	 * Get name of the class from interpret string
+	 * @param $string class->method string
+	 * @return class name or null if string holds function name
 	 */
-	public function fire() {}
+	private function _getClassName($string) {
+		$className = null;
+		$pointerPosition = strpos($string, '->');
+		if ($pointerPosition > 0) {
+			$className = substr($string, 0, $pointerPosition);
+		}
+		return $className;
+	}
+	/**
+	 * Get name of the method from interpret string
+	 * @param $string class->method string
+	 * @return method or function name
+	 */
+	private function _getMethodName($string) {
+		$methodName = $this->objectToIntercept;
+		$pointerPosition = strpos($string, '->') + 2;
+		if ($pointerPosition > 2) {
+			$methodName = substr($string, $pointerPosition, strlen($string) - $pointerPosition);
+		}
+		return $methodName;
+	}
 	/**
 	 * Get name of the class which method should be intercepted
 	 * @return class name or null if $objectToIntercept holds function name
 	 */
 	public function getClassName() {
-		$className = null;
-		$pointerPosition = strpos($this->objectToIntercept, '->');
-		if ($pointerPosition > 0) {
-			$className = substr($this->objectToIntercept, 0, $pointerPosition);
-		}
-		return $className;
+		return $this->_getClassName($this->objectToIntercept);
 	}
 	/**
 	 * Get name method that should be intercepted
 	 * @return class name
 	 */
 	public function getMethodName() {
-		$methodName = $this->objectToIntercept;
-		$pointerPosition = strpos($this->objectToIntercept, '->') + 2;
-		if ($pointerPosition > 2) {
-			$methodName = substr($this->objectToIntercept, $pointerPosition, strlen($this->objectToIntercept) - $pointerPosition);
-		}
-		return $methodName;
+		return $this->_getMethodName($this->objectToIntercept);
+	}
+	/**
+	 * Get name of the class which method should be called
+	 * @return class name or null if $objectToIntercept holds function name
+	 */
+	public function getCallClassName() {
+		return $this->_getClassName($this->call);
+	}
+	/**
+	 * Get name method that should be called
+	 * @return class name
+	 */
+	public function getCallMethodName() {
+		return $this->_getMethodName($this->call);
 	}
 	/**
 	 * Get call type
@@ -64,6 +89,14 @@ class Joinpoint {
 	 */
 	public function getCallType() {
 		return $this->callType;
+	}
+	/**
+	 * Execute $call function
+	 * This method will be fired on the $callType event for $objectToIntercept
+	 */
+	public function fire() {
+		$funcCreation = '$ob=new '.$this->getCallClassName().'();$ob->'.$this->getCallMethodName().'();';
+		eval($funcCreation);
 	}
 	/**
 	 * Get function that must be called

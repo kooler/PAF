@@ -1,8 +1,5 @@
 <?php
 include_once 'paf/aspect.php';
-/******************************************************************
- **************************** Example *****************************
- ******************************************************************/
 
 class Book {
 	private $rating;
@@ -11,11 +8,11 @@ class Book {
 		$this->rating = 0;
 	}
 
-	private function addRating() {
+	public function addRating() {
 		$this->rating++;
 	}
 	
-	private function decRating() {
+	public function decRating() {
 		$this->rating--;
 	}
 }
@@ -26,18 +23,38 @@ class LoggerAspect extends Aspect {
 	 * @After(Book->addRating)
 	 */
 	function logRatingInc() {
-		echo 'Rating has been incremented';
+		echo "Rating has been incremented";
 	}
 	/**
 	 * Log rating decrementing
 	 * @After(Book->decRating)
 	 */
 	function logRatingDec() {
-		echo 'Rating has been decremented';
+		echo "Rating has been decremented";
+	}
+	/**
+	 * Logger tags
+	 * @Around(Book->(addRating|decRating))
+	 */
+	function loggerWrap() {
+		echo "|";
+	}
+	/**
+	 * Sho each logger message on new line
+	 * @After(Book->(addRating|decRating))
+	 */
+	function loggerNewLine() {
+		echo "\n";
 	}
 }
 
 AspectRegistry::getInstance()->addAspect(new LoggerAspect);
 AspectRegistry::getInstance()->interceptAll();
+
+//Test aspect joinpoints call
+$book = new Book();
+$book->addRating();
+$book->decRating();
+$book->addRating();
 
 

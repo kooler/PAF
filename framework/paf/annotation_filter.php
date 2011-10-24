@@ -22,7 +22,7 @@ class AnnotationFilter {
 	 */
 	public function getTypeMethodFromAnnotation($annotation) {
 		$result = null;
-		if (preg_match('/@(Before|After|Around)\((.*)\)/iU', $annotation, $matches)) {
+		if (preg_match('/@(Before|After|Around)\((.*)\)/', $annotation, $matches)) {
 			$result = array($matches[1], $matches[2]);
 		}
 		return $result;
