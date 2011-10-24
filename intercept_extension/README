@@ -1,0 +1,48 @@
+intercept 0.1
+-------------
+
+The intercept extension currently only provides one function:
+
+intercept_add($target_func, $handler_func [, $intercept_type]);
+
+	Registers $handler_func to be called whenever
+	$target_func is called.
+
+	$intercept_type determines whether $handler_func
+	is called before or after $target_func.
+
+	Valid values for $intercept_type:
+
+		PRE_INTERCEPT - call $handler_func before
+						  - this is the default
+
+		POST_INTERCEPT - call $handler_func after
+
+Example:
+
+<?php
+
+function myfunc() {
+	echo "this is my function";
+}
+
+function pre_myfunc() {
+	echo "before myfunc()";
+}
+
+function post_myfunc() {
+	echo "after myfunc()";
+}
+
+intercept_add('myfunc', 'pre_myfunc', PRE_INTERCEPT);
+intercept_add('myfunc', 'post_myfunc', POST_INTERCEPT);
+
+myfunc();
+
+?>
+
+Output:
+
+before myfunc()
+this is my function
+after myfunc()
