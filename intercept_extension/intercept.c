@@ -376,41 +376,54 @@ ZEND_API void intercept_execute(zend_op_array *op_array TSRMLS_DC)
 	char *fname = NULL;
 	int cb_res = NULL;
 	zval *retval = NULL;
-	zval *args[1];
 	zval **func_name;
 	zval **object;
 
 	fname = intercept_get_active_function_name(op_array TSRMLS_CC);
 
 	if( zend_hash_find(Z_ARRVAL_P(IntG(pre_intercept_handlers)), fname, strlen(fname) + 1, (void **) &func_name) != FAILURE ) {
-		MAKE_STD_ZVAL(args[0]);
 		MAKE_STD_ZVAL(retval);
 
-		// MARKER
-		// if is array
-		// copy array[1] to target_name (this is the method name)
-		// copy array[0] to object name
-
-
+		//Get function arguments
+		int arg_count = op_array->num_args;
+		zval *method_args_ptr;
+		ALLOC_ZVAL(method_args_ptr);
+		INIT_PZVAL(method_args_ptr);
+		array_init_size(method_args_ptr, arg_count);
+		
+		if (zend_copy_parameters_array(arg_count, method_args_ptr TSRMLS_CC) == FAILURE) {
+			zval_dtor(method_args_ptr);
+		}
+		
 		cb_res = call_user_function(EG(function_table),
 									NULL,
 									*func_name,
-									retval, 0, args TSRMLS_CC);
-		FREE_ZVAL(retval);
-		FREE_ZVAL(args[0]);	
+									retval, 1, &method_args_ptr TSRMLS_CC);
+								
+		FREE_ZVAL(retval);	
 	}
 
 	intercept_old_execute(op_array TSRMLS_CC);
 
 	if( zend_hash_find(Z_ARRVAL_P(IntG(post_intercept_handlers)), fname, strlen(fname) + 1, (void **) &func_name) != FAILURE ) {
-		MAKE_STD_ZVAL(args[0]);
 		MAKE_STD_ZVAL(retval);
+		
+		//Get function arguments
+		int arg_count = op_array->num_args;
+		zval *method_args_ptr;
+		ALLOC_ZVAL(method_args_ptr);
+		INIT_PZVAL(method_args_ptr);
+		array_init_size(method_args_ptr, arg_count);
+		
+		if (zend_copy_parameters_array(arg_count, method_args_ptr TSRMLS_CC) == FAILURE) {
+			zval_dtor(method_args_ptr);
+		}
+		
 		cb_res = call_user_function(EG(function_table),
 									NULL,
 									*func_name,
-									retval, 0, args TSRMLS_CC);
+									retval, 1, &method_args_ptr TSRMLS_CC);
 		FREE_ZVAL(retval);
-		FREE_ZVAL(args[0]);
 	}
 
 	efree(fname);
