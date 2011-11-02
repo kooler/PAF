@@ -39,11 +39,11 @@ public function getInterceptors() {return $this->interceptors;}
 	 * @param $type the type of the interceptor (Before|After|Around)
 	 * @param $func name of the function that should be intercepted
 	 */
-	public function fire($type, $func) {
+	public function fire($type, $func, $arguments) {
 		if (isset($this->interceptors[$func])) {
 			foreach ($this->interceptors[$func] as $joinpoint) {
 				if ($joinpoint->getCallType() == $type || $joinpoint->getCallType() == 'Around') {
-					$joinpoint->fire();
+					$joinpoint->fire($arguments);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ public function getInterceptors() {return $this->interceptors;}
 	public function getMethodInterceptorsCall($type, $func) {
 		$funcName = $this->getCommonInterceptorsFunctionName($type, $func);
 		if (!function_exists($funcName)) {
-			eval('function '.$funcName.'(){InterceptionChain::getInstance()->fire("'.$type.'","'.$func.'");}');
+			eval('function '.$funcName.'(){InterceptionChain::getInstance()->fire("'.$type.'","'.$func.'", func_get_args());}');
 		}
 		return $funcName;
 	}
