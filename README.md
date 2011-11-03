@@ -1,5 +1,7 @@
 # PHP Aspect framework(PAF)
 
+[Aspect oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming) in PHP.
+
 By default PHP doesn't allow to use Aspects without making wrappers to all methods, that must be intercepted. This approach is not always usable because need a lot of extra code and may cause a lot of problems if have to be implemented on existings systems.
 
 This framework+module allows to use Aspect Oriented Programming without wrappers, but creating Aspects with interceptors to defined object/methods. Interception rules are defined in comments.
