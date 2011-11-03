@@ -8,15 +8,15 @@ To allow method intercepting I made Intercept module that may be found in "inter
 This module is modification of "PHP Intercept"(I got it here: http://pecl.php.net/package/intercept) with added functionality.
 
 For example, we have object:
-<code>
+<pre><code>
 class Book {
 	public function sayHello() {
 		echo 'Hello';
 	}
 }
-</code>
-and we want to have interceptor that will insert "!" after each **sayHello** call. Let's create new aspect with interceptor and define rule for intercepting Book->seyHello
-<code>
+</code></pre>
+and we want to have interceptor that will insert "!" after each <pre><code>sayHello()</code></pre> call. Let's create new aspect with interceptor and define rule for intercepting Book->seyHello
+<pre><code>
 class BookAspect extends Aspect {
 	/**
 	 * This is our interceptor. In the next line we will define the rule when this method have to be called
@@ -26,13 +26,13 @@ class BookAspect extends Aspect {
 		echo "!\n";
 	}
 }
-</code>
+</code></pre>
 Now all we need to make them all together - register aspect and apply all inteceptors:
-<code>
+<pre><code>
 AspectRegistry::getInstance()->addAspect(new BookAspect);
 AspectRegistry::getInstance()->interceptAll();
-</code>
+</code></pre>
 
-Now after each time when we will call **Book->sayHello** the **BookAspect->finishTheSentence** will be called.
+Now after each time when we will call <pre><code>Book->sayHello</code></pre> the <pre><code>BookAspect->finishTheSentence</code></pre> will be called.
 
 Detailed information and examples are here: <https://github.com/kooler/PAF/wiki>
