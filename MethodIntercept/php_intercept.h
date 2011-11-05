@@ -1,6 +1,6 @@
 /*
   +----------------------------------------------------------------------+
-  | Intercept Extension                                                  |
+  | MethodIntercept extension based on Intercept Extension               |
   +----------------------------------------------------------------------+
   | Copyright (c) 2005 Gabriel Ricard                                    |
   +----------------------------------------------------------------------+
@@ -12,10 +12,9 @@
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
   +----------------------------------------------------------------------+
-  | Author: Gabriel Ricard <gabe@php.net>                                |
+  | Author: Konstantin Goncharuk <konstantin.goncharuk@gmail.com>        |
+  | Author(Intercept extension): Gabriel Ricard <gabe@php.net>           |
   +----------------------------------------------------------------------+
-
-  $Id: php_intercept.h,v 1.2 2005/02/27 01:57:59 gabe Exp $ 
 */
 
 #ifndef PHP_INTERCEPT_H
