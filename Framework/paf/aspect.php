@@ -6,6 +6,7 @@ include_once 'aspect_registry.php';
 include_once 'interception_chain.php';
 /*
  * Base aspect class. Must be extended in all aspects
- * IMPORTANT: Each aspect should have constructor without arguments
  */
-abstract class Aspect {};
+abstract class Aspect {
+	final public function __construct() {}
+};
