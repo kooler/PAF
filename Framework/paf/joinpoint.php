@@ -95,8 +95,9 @@ class Joinpoint {
 	 * This method will be fired on the $callType event for $objectToIntercept
 	 */
 	public function fire($arguments) {
-		$funcCreation = '$ob=new '.$this->getCallClassName().'();$ob->'.$this->getCallMethodName().'($arguments);';
-		eval($funcCreation);
+		$objClass = $this->getCallClassName();
+		$obj = new $objClass;
+		$obj->{$this->getCallMethodName()}($arguments);
 	}
 	/**
 	 * Get function that must be called
